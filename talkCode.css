@@ -1,0 +1,154 @@
+html, body
+{
+	height: 100%;
+	width: auto;
+	padding: 0;
+	margin: 0px;
+	overflow-x: hidden;
+	/* background-color: black;
+	background-size: cover; */
+}
+
+body
+{
+	display: flex;
+}
+
+body div:first-of-type
+{
+
+}
+
+h1
+{
+	font-family: 'Fascinate', serif;
+	margin: 0;
+	/* position: absolute;
+	margin: auto;
+	width: 100%;
+	text-align: center;
+	top: 15vh;
+	font-size: 5vw;
+	color: #ffffffa0; */
+}
+
+p
+{
+	font-family: 'Fira Code', monospace;
+}
+
+img
+{
+	/* width: 20vw; */
+}
+
+
+#codeWindow
+{
+	padding: 2vw;
+	width: 25vw;
+	height: 100vh;
+	background-color: black;
+	color: white;
+	border-right: 2vw solid lightblue;
+	border-top: 4vw solid black;
+}
+
+pre
+{
+	white-space: pre-wrap;
+}
+
+
+#test
+{
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+.numbersDiv
+{
+	/* width: 100vw; */
+	/* height: 100vh; */
+	position: absolute;
+	top: 0; left: 25vw;
+	pointer-events: none;
+	display: none;
+	outline: green;
+}
+
+.elementNumber
+{
+	position: absolute;
+	color: red;
+	border-radius: 50%;
+	background-color: yellow;
+	height: 3vw;
+	width: 3vw;
+	padding: 0.5vw;
+	text-align: center;
+}
+
+.animated
+{
+	transition: all 0.5s ease 0s;
+	/* transition: transform 2s ease 0s, opacity 0.5s ease 0s; */
+}
+
+input
+{
+	position:absolute;
+	width: 10vw;
+	height: 2vw;
+}
+
+#resultPage, #numbersDiv
+{
+	width: 75vw;
+}
+
+#resultPage
+{
+	background-color: white;
+	top: 0;
+	left:0;
+	position: relative;
+	flex-wrap: wrap;
+	display: flex;
+	align-content: flex-start;
+}
+
+#resultPage div
+{
+	display: flex;
+	align-content: flex-start;
+	flex-wrap: wrap;
+}
+
+#resultPage h1
+{
+	font-size: 2.8vw;
+}
+
+#resultPage p
+{
+	font-size: 0.8vw;
+	font-family: 'Open Sans', sans-serif;
+}
+
+#resultPage *
+{
+	position:relative;
+
+	/* for animation */
+	transition: all 1s ease;
+	top: 0; left: 0;
+	text-align: left;
+	opacity: 1.0;
+}
+
+#resultPage img
+{
+	width: 40%;
+}
