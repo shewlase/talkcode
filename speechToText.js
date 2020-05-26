@@ -3,7 +3,8 @@ window.SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGramma
 
 let recognition;
 // recognition.lang = 'fr-FR';
-let validTagCommands = ['heading', 'title', 'paragraph', 'image', 'picture', 'division'];
+let validTagCommands = ['heading', 'title', 'paragraph', 'division'];
+// let validTagCommands = ['heading', 'title', 'paragraph', 'image', 'picture', 'division'];
 // recognition.lang = 'en-US';
 let grammar = "#JSGF V1.0; grammar commands; public <commands> = division | heading | clear | yep | title | color | width | height | background | 1 | 2 | 3 | 4"
 var speechRecognitionList = new SpeechGrammarList();
@@ -57,6 +58,10 @@ function setSaid(saidString)
 function processSpeech(currentCommand)
 {
   // lastWords = transcript;
+  if(said.innerHTML == 'Reconnecting...' || said.innerHTML == 'Connecting microphone...')
+  {
+    setSaid('Say something.')
+  }
   lastWord = getLastWord(currentCommand).toLowerCase();
   said.innerHTML = currentCommand;
   // document.querySelector('input').innerHTML = currentCommand;
@@ -108,7 +113,19 @@ function processSpeech(currentCommand)
     startIndex = globalTrans.split(" ").length;
   }
 
-  if(firstWord == 'edit')//currentCommandAsList.includes()
+  if(currentCommand.includes('image') || currentCommand.includes('picture'))
+  {
+    setEditMode('IMAGE');
+    startIndex = globalTrans.split(" ").length;
+  }
+  // else if(lastWord == 'search' && getEditMode() == 'IMAGE')
+  // {
+  //   getImages(currentCommand.replace('search', ''));
+  //   // setSaid('');
+  //   startIndex = globalTrans.split(" ").length;
+  // }
+
+  if(firstWord == 'edit' || firstWord == 'select')//currentCommandAsList.includes()
   {
     // currentWordsList[1];
     // let editValue = currentCommandAsList[1];
@@ -143,34 +160,10 @@ function processSpeech(currentCommand)
   else if(editMode == 'SELECT')//select created elements from here
   {
     //not just first word
-    let numberWords = ['one', 'two', 'to', 'three', 'for', 'four'];
-    // currentCommand contains a number
-    let firstWordIsNumber = !isNaN(parseInt(firstWord));
-    let firstWordIsNumberWord = numberWords.includes(firstWord);
-    if(firstWordIsNumberWord)
+    let numberCheck = wordIsNumber(firstWord);
+    if(numberCheck[0])
     {
-      firstWordIsNumber = true;
-      let index = numberWords.indexOf(firstWord);
-      if(index == 0)
-      {
-        firstWord = '1';
-      }
-      else if(index == 1 || index == 2)
-      {
-        firstWord = '2';
-      }
-      else if(index == 3)
-      {
-        firstWord = '3';
-      }
-      else if(index == 4 || index == 5)
-      {
-        firstWord = '4';
-      }
-    }
-
-    if(firstWordIsNumber)
-    {
+      if(numberCheck[1] != firstWord) firstWord = numberCheck[1];
       let number = parseInt(firstWord);
       // setActiveElementWithWord(firstWord);
       addToCommits('Select: '+number);
@@ -178,7 +171,7 @@ function processSpeech(currentCommand)
       startIndex = globalTrans.split(" ").length;
     }
 
-    if(lastWord == contentEndWord)
+    if(lastWord == contentEndWord)//select div
     {
       setEditMode('STYLE');
       hideElementNumbers();
@@ -215,6 +208,39 @@ function processSpeech(currentCommand)
       }
     }
   }
+  else if (editMode == 'IMAGE')
+  {
+    if(lastWord == 'search')
+    {
+      getImages(currentCommand.replace('search', ''));
+      startIndex = globalTrans.split(" ").length;
+    }
+
+    if(wordIsNumber(firstWord)[0])
+    {
+      let number = parseInt(firstWord);
+      // setActiveElementWithWord(firstWord);
+      if(number < 7)
+      {
+        addToCommits('Select image: '+number);
+        addImageByNumber(number);
+        startIndex = globalTrans.split(" ").length;
+      }
+    }
+
+    if(currentCommand.includes('previous'))
+    {
+      changeImagePage(-1);
+      startIndex = globalTrans.split(" ").length;
+    }
+    else if(currentCommand.includes('next'))
+    {
+      changeImagePage(1);
+      startIndex = globalTrans.split(" ").length;
+    }
+
+    // if(firstWord)
+  }
   // else if (editMode == 'STYLE')
   // {
   //   document.querySelector('#test').innerHTML = editMode;
@@ -237,5 +263,6 @@ function startRecognition()
   // console.log('boop');
   console.log('restart at: '+(new Date().getTime() - speechStartTime)/1000/60);
   startIndex = 0;
+  setSaid('Reconnecting...');
   recognition.start();
 }

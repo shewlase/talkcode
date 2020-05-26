@@ -8,10 +8,25 @@
 		<title>TalkCode</title>
 	</head>
 	<body onload='init()'>
+		<h1 id='said'>Connecting microphone...</h1>
 			<div id='codeWindow'>
-				<h1 id='said'>Code</h1>
 				<p></p>
 				<pre><code></code></pre>
+			</div>
+			<div id='imageSelect'>
+				<h1>← "Previous"</h1>
+				<h1>"Next" →</h1>
+				<div class= 'halfGallery' id='searchGalleryTop'>
+					<img src = 'mountain.jpg'>
+					<img src = 'drum.png'>
+					<img src = 'mountain.jpg'>
+				</div>
+				<div class= 'halfGallery' id='searchGalleryBottom'>
+					<img src = 'drum.png'>
+					<img src = 'mountain.jpg'>
+					<img src = 'mountain.jpg'>
+				</div>
+				<div id='imageNumbers'></div>
 			</div>
 			<div id='resultPage'></div>
 				<!-- <h1 style='top: 70vh; font-size: 3vw;'></h1> -->

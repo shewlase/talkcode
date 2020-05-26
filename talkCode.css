@@ -23,6 +23,7 @@ h1
 {
 	font-family: 'Fascinate', serif;
 	margin: 0;
+	font-size: 2vw;
 	/* position: absolute;
 	margin: auto;
 	width: 100%;
@@ -42,16 +43,30 @@ img
 	/* width: 20vw; */
 }
 
+#said
+{
+	width: 100vw;
+	min-height: 2.5vw;
+	background-color: black;
+	color: white;
+	position: fixed;
+	z-index: 100;
+	text-align: center;
+}
 
 #codeWindow
 {
 	padding: 2vw;
+	box-sizing: border-box;
 	width: 25vw;
 	height: 100vh;
-	background-color: black;
+	background-color: rgba(0,0,0,0.7);
 	color: white;
-	border-right: 2vw solid lightblue;
+	/* border-right: 2vw solid lightblue; */
 	border-top: 4vw solid black;
+	position: absolute;
+	z-index: 10;
+	left: -25vw;
 }
 
 pre
@@ -69,10 +84,8 @@ pre
 
 .numbersDiv
 {
-	/* width: 100vw; */
-	/* height: 100vh; */
 	position: absolute;
-	top: 0; left: 25vw;
+	top: 0; left: 0;
 	pointer-events: none;
 	display: none;
 	outline: green;
@@ -90,28 +103,11 @@ pre
 	text-align: center;
 }
 
-.animated
-{
-	transition: all 0.5s ease 0s;
-	/* transition: transform 2s ease 0s, opacity 0.5s ease 0s; */
-}
-
-input
-{
-	position:absolute;
-	width: 10vw;
-	height: 2vw;
-}
-
-#resultPage, #numbersDiv
-{
-	width: 75vw;
-}
-
 #resultPage
 {
 	background-color: white;
-	top: 0;
+	width: 100vw;
+	top: 2.5vw;
 	left:0;
 	position: relative;
 	flex-wrap: wrap;
@@ -151,4 +147,85 @@ input
 #resultPage img
 {
 	width: 40%;
+}
+
+#imageSelect
+{
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	background: rgba(255,255,255, 0.8);
+	z-index: 5;
+	opacity: 0.0;
+	/* display: none; */
+}
+
+.halfGallery
+{
+	display: flex;
+	flex-wrap: wrap;
+	width: 55vw;
+	left: 22.5vw;
+	height: 25vw;
+	position: relative;
+	z-index: 3;
+	/* border: 1px solid black; */
+	align-items:center;
+}
+
+#searchGalleryTop
+{
+	/* align-content: flex-end; */
+	margin-top: 2vw;
+	align-items: flex-end;
+}
+
+#searchGalleryBottom
+{
+	align-items: flex-start;
+	/* align-content: flex-start; */
+	/* flex-direction: column; */
+	/* align-content: flex-start; */
+	/* width: 55vw;
+	left: 22.5vw; */
+	/* top: 3vw;
+	height: 50vw;
+	position: absolute;
+	z-index: 3; */
+}
+
+/* #searchGallery img */
+.halfGallery img
+{
+	margin-top: 8%;
+	margin-left: 8%;
+	width: 25%;
+	max-width: 28%;
+	object-fit: contain;
+	/* max-height: 10vw; */
+	/* transition: 1s; */
+}
+
+#imageNumbers
+{
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	top: 0;
+	z-index: 5;
+	/* display: none; */
+}
+
+
+.animated
+{
+	transition: all 0.5s ease 0s;
+	/* transition: transform 2s ease 0s, opacity 0.5s ease 0s; */
+}
+
+input
+{
+	position:absolute;
+	width: 10vw;
+	height: 2vw;
 }
