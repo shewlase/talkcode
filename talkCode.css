@@ -176,7 +176,7 @@ pre
 #searchGalleryTop
 {
 	/* align-content: flex-end; */
-	margin-top: 2vw;
+	/* margin-top: 2vw; */
 	align-items: flex-end;
 }
 
@@ -216,6 +216,18 @@ pre
 	/* display: none; */
 }
 
+#helpText
+{
+	width: 27vw;
+	top: 8vw;
+	left: 5vw;
+	transform: rotate(-10deg);
+	position: absolute;
+	z-index: 100;
+	text-align: center;
+	pointer-events: none;
+	user-select: none;
+}
 
 .animated
 {

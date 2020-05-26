@@ -43,8 +43,21 @@ function initSpeech()
         processSpeech(currentCommand);
       }
   });
+  startSaySometingTimer(); //should only be online version
   recognition.start();
   setInterval(stopRecognition, 240000);//4 minutes, restart, stops auto stop @ 5mins
+}
+
+function startSaySometingTimer()
+{
+  setTimeout(function()
+  {
+    setSaid('Almost there...');
+    setTimeout(function()
+    {
+      setSaid('Try talking now');
+    }, 4000);
+  }, 6000);
 }
 
 function resetStartIndex()
@@ -57,10 +70,10 @@ function setSaid(saidString)
 }
 function processSpeech(currentCommand)
 {
-  // lastWords = transcript;
+  //doesnt work
   if(said.innerHTML == 'Reconnecting...' || said.innerHTML == 'Connecting microphone...')
   {
-    setSaid('Say something.')
+    setSaid('Say something.');
   }
   lastWord = getLastWord(currentCommand).toLowerCase();
   said.innerHTML = currentCommand;
@@ -212,7 +225,8 @@ function processSpeech(currentCommand)
   {
     if(lastWord == 'search')
     {
-      getImages(currentCommand.replace('search', ''));
+      let searchTerm = currentCommand.replace('search', '');
+      if(searchTerm.trim() != '') getImages(searchTerm);
       startIndex = globalTrans.split(" ").length;
     }
 
@@ -265,4 +279,5 @@ function startRecognition()
   startIndex = 0;
   setSaid('Reconnecting...');
   recognition.start();
+  startSaySometingTimer();
 }

@@ -18,6 +18,7 @@ let numbersDiv = document.querySelector('#numbersDiv');
 let searchGalleryTop = document.querySelector('#searchGalleryTop');
 let searchGalleryBottom = document.querySelector('#searchGalleryBottom');
 let imageSelect = document.querySelector('#imageSelect');
+let helpText = document.querySelector('#helpText');
 
 let imgFitValues = ['fill', 'contain', 'cover'];
 
@@ -50,6 +51,8 @@ let editMode = 'HOME';
 let allCommits = [];
 let lastCommit;
 let startTime = new Date().getTime();
+
+let isFirstImageSearch = true;
 // let allDivs = [];
 function init()
 {
@@ -295,11 +298,12 @@ function refreshNumberPositions()
       let element = elAndNum[0];
       let number = elAndNum[1];
       let elRect = element.getBoundingClientRect();
-      let resultDivX = resultPage.getBoundingClientRect().left;
+      // let resultDivX = resultPage.getBoundingClientRect().left;
       // let resultDivX = resultPage.getBoundingClientRect().left;
       // number.style.top = (elRect.top+resultDivX)+'px';
-      number.style.top = elRect.top+'px';
-      number.style.left = (elRect.left-resultDivX)+'px';
+      number.style.top = elRect.top+0.5*elRect.height+'px';
+      number.style.left = elRect.left+0.5*elRect.width+'px';
+      // number.style.left = (elRect.left-resultDivX)+'px';
     });
   });
 }
@@ -844,8 +848,8 @@ function refreshGallery()
   // for(let i = 0; i < 6; i++)
   for(let i = 0; i < 3; i++)
   {
-    var srcTop = imageData.photos[i+(pageNumber*6)].src.medium;
-    var srcBot = imageData.photos[i+3+(pageNumber*6)].src.medium;
+    var srcTop = imageData.photos[i+(pageNumber*6)].src.large;
+    var srcBot = imageData.photos[i+3+(pageNumber*6)].src.large;
     allTopSeachImages[i].src = srcTop;
     allBotSeachImages[i].src = srcBot;
   }
@@ -872,6 +876,11 @@ function addImageByNumber(number) //1-6
   activeDiv.appendChild(newImage);
   setActiveElement(newImage);
   createElementNumber(newImage);
+  if(isFirstImageSearch)
+  {
+    isFirstImageSearch = false;
+    helpText.style.opacity = 0;
+  }
 }
 
 //numbers and next/previous labels
@@ -905,8 +914,8 @@ function createGalleryControls()
 
     imageSelect.querySelectorAll('h1')[0].style.position = 'absolute';
     imageSelect.querySelectorAll('h1')[1].style.position = 'absolute';
-    imageSelect.querySelectorAll('h1')[0].style.top = '40vh';
-    imageSelect.querySelectorAll('h1')[1].style.top = '40vh';
+    imageSelect.querySelectorAll('h1')[0].style.top = '70vh';
+    imageSelect.querySelectorAll('h1')[1].style.top = '70vh';
     imageSelect.querySelectorAll('h1')[1].style.right = '0';
 
     // });
@@ -917,7 +926,9 @@ function createGalleryControls()
 var pexelsKey = '563492ad6f91700001000001da0ffdd88dd64342b698ac6fb52e2a29';
 function getImages(searchTerm)
 {
-	let fetchData =
+  helpText.innerHTML = 'Say the number of the image to add  <br> to site or "next" to see more';
+
+  let fetchData =
 	{
 		"method": "GET",
 	   "headers":
@@ -925,9 +936,7 @@ function getImages(searchTerm)
 	    "Authorization": pexelsKey
 		}
 	}
-// fetch(url, fetchData)
-	// fetch('https://api.openweathermap.org/data/2.5/weather?id=' + cityID+ '&appid=' + key)
-	// fetch('https://developers.zomato.com/api/v2.1/collections?city_id='+zomCityID , fetchData)
+	// fetch('https://api.pexels.com/videos/search?query='+searchTerm+'&per_page=30&page=1', fetchData)
 	fetch('https://api.pexels.com/v1/search?query='+searchTerm+'&per_page=30&page=1', fetchData)
 	.then(function(resp) { return resp.json() }) // Convert data to json
 	.then(function(data)
@@ -944,6 +953,10 @@ function getImages(searchTerm)
 function showImageSearch()
 {
   // imageSelect.style.display = "block";
+  if(isFirstImageSearch)
+  {
+    helpText.innerHTML = 'Try say "banana" then <br> "search" or "dog search"';
+  }
   imageSelect.style.opacity = "1.0";
 }
 
