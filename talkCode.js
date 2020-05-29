@@ -24,6 +24,7 @@ let imgFitValues = ['fill', 'contain', 'cover'];
 
 const obsConfig = { attributes: true, childList: true, subtree: true };
 let observer;
+let editingImage = false;
 
 let display = '';
 let wholeCodeString = '';
@@ -89,6 +90,12 @@ function applyCommand(voiceCommand)
   setCodeWindow();
 }
 
+function clearNumbers()
+{
+  numberContainers = [];
+  //need remove containers from page
+}
+
 // let contentEndWord = 'fox';
 //preprocessing html based on text commands
 //e.g. heading the title here and color red
@@ -141,9 +148,9 @@ function createElementFromWord(tagWord)
 //should set activeNumberContainer
 function setActiveDiv(div)
 {
-  if(activeDiv != null) activeDiv.style.border = '';
+  // if(activeDiv != null) activeDiv.style.border = '';
   activeDiv = div;
-  activeDiv.style.border = '2px solid blue';
+  // activeDiv.style.border = '2px solid blue';
   if(div != resultPage)
   {
     editMode = 'STYLE';
@@ -212,9 +219,19 @@ function commitEdit(commandString)
     // styleUpdated =
     if(commandString.toLowerCase().split(' ').includes('content'))
     {
-      setEditMode('CONTENT');
-      addToCommits('Mode: content');
-      resetStartIndex();
+      if(activeElement.tagName == 'IMG')
+      {
+        //show image select
+        editingImage = true;
+        setEditMode('IMAGE');
+        resetStartIndex();
+      }
+      else
+      {
+        setEditMode('CONTENT');
+        addToCommits('Mode: content');
+        resetStartIndex();
+      }
     }
     else
     {
@@ -236,6 +253,10 @@ function commitEdit(commandString)
   // cycleEditMode();
 }
 
+function checkEditingImage()
+{
+  return editingImage;
+}
 
 let elementsAndNumbers = [];
 //need to differentiate between which childgroup
@@ -428,7 +449,7 @@ function setEditMode(mode)
 
 function wordIsNumber(word)
 {
-  let numberWords = ['one', 'two', 'to', 'three', 'for', 'four'];
+  let numberWords = ['one', 'two', 'to', 'three', 'for', 'four', 'sex'];
   // currentCommand contains a number
   let firstWordIsNumber = !isNaN(parseInt(word));
   let firstWordIsNumberWord = numberWords.includes(word);
@@ -451,6 +472,10 @@ function wordIsNumber(word)
     else if(index == 4 || index == 5)
     {
       word = '4';
+    }
+    else if(index == 6)
+    {
+      word = '6';
     }
   }
   let result = [firstWordIsNumber, word];
@@ -856,23 +881,26 @@ function refreshGallery()
 	// var src = d.photos[randomNumber].src.large;1
 	// document.getElementById('topImg').src = src;
 }
+function getSrcByNumber(number)
+{
+  let src = '';
+  let allTopSeachImages = searchGalleryTop.querySelectorAll('img');
+  let allBotSeachImages = searchGalleryBottom.querySelectorAll('img');
+  if(number < 4)
+  {
+    src = allTopSeachImages[number-1].src;
+  }
+  else
+  {
+    src = allBotSeachImages[number-4].src;
+  }
+  return src;
+}
 
 function addImageByNumber(number) //1-6
 {
   let newImage = document.createElement('IMG');
-  let allTopSeachImages = searchGalleryTop.querySelectorAll('img');
-  let allBotSeachImages = searchGalleryBottom.querySelectorAll('img');
-  //src to match number
-  //1-3 allTopSeachImages
-  if(number < 4)
-  {
-    newImage.src = allTopSeachImages[number-1].src;
-  }
-  else
-  {
-    newImage.src = allBotSeachImages[number-4].src;
-  }
-  imageSelect.style.opacity = '0.0';
+  newImage.src = getSrcByNumber(number);
   activeDiv.appendChild(newImage);
   setActiveElement(newImage);
   createElementNumber(newImage);
@@ -881,6 +909,15 @@ function addImageByNumber(number) //1-6
     isFirstImageSearch = false;
     helpText.style.opacity = 0;
   }
+  hideImageSearch();
+}
+
+function changeImageByNumber(number)
+{
+  activeElement.src = getSrcByNumber(number);
+  editingImage = false;
+  setEditMode('STYLE');
+  hideImageSearch();
 }
 
 //numbers and next/previous labels
@@ -927,7 +964,7 @@ var pexelsKey = '563492ad6f91700001000001da0ffdd88dd64342b698ac6fb52e2a29';
 function getImages(searchTerm)
 {
   helpText.innerHTML = 'Say the number of the image to add  <br> to site or "next" to see more';
-
+  pageNumber = 1;
   let fetchData =
 	{
 		"method": "GET",
@@ -958,6 +995,19 @@ function showImageSearch()
     helpText.innerHTML = 'Try say "banana" then <br> "search" or "dog search"';
   }
   imageSelect.style.opacity = "1.0";
+  setTimeout(function()
+  {
+    imageSelect.style.display = 'block';
+  },10);
+}
+
+function hideImageSearch()
+{
+  imageSelect.style.opacity = '0.0';
+  setTimeout(function()
+  {
+    imageSelect.style.display = 'none';
+  },10);
 }
 
 function toggleCodeWindow()

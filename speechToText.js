@@ -79,7 +79,7 @@ function processSpeech(currentCommand)
   said.innerHTML = currentCommand;
   // document.querySelector('input').innerHTML = currentCommand;
   let currentCommandAsList = currentCommand.split(' ');
-  let firstWord = currentCommandAsList[0];
+  let firstWord = currentCommandAsList[0].toLowerCase();
   let lastWordRegEx = new RegExp(lastWord, "i");//case insensitive
   let editMode = getEditMode();
 
@@ -111,6 +111,8 @@ function processSpeech(currentCommand)
     clearCode();
     setEditMode('HOME');
     startIndex = globalTrans.split(" ").length;
+    //clear element numbers
+    clearNumbers();
   }
   else if(lastWord == 'exit' )//escape from active div
   {
@@ -236,8 +238,17 @@ function processSpeech(currentCommand)
       // setActiveElementWithWord(firstWord);
       if(number < 7)
       {
-        addToCommits('Select image: '+number);
-        addImageByNumber(number);
+        if(checkEditingImage())
+        {
+          //change src of active element
+          addToCommits('Change image');
+          changeImageByNumber(number);
+        }
+        else
+        {
+          addToCommits('Select image: '+number);
+          addImageByNumber(number);
+        }
         startIndex = globalTrans.split(" ").length;
       }
     }
