@@ -229,6 +229,21 @@ pre
 	user-select: none;
 }
 
+.circle
+{
+	border-radius: 50%;
+	width: 20vw;
+	height: 20vw;
+	background-color: lightblue;
+}
+
+.square
+{
+	width: 20vw;
+	height: 20vw;
+	background-color: lightblue;
+}
+
 .animated
 {
 	transition: all 0.5s ease 0s;

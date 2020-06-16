@@ -54,6 +54,7 @@ let lastCommit;
 let startTime = new Date().getTime();
 
 let isFirstImageSearch = true;
+let currentClone, undoClone;
 // let allDivs = [];
 function init()
 {
@@ -121,8 +122,21 @@ function createElementFromWord(tagWord)
     tag = 'div';
   }
 
-  newElement = document.createElement(tag);
 
+  if(tag != '')
+  {
+    newElement = document.createElement(tag);
+  }
+  else if(tagWord == 'circle')
+  {
+    newElement = document.createElement('div');
+    newElement.classList.add('circle');
+  }
+  else if(tagWord == 'square')
+  {
+    newElement = document.createElement('div');
+    newElement.classList.add('square');
+  }
   activeDiv.appendChild(newElement);
   // if(activeDiv != null)
   // {
@@ -141,7 +155,13 @@ function createElementFromWord(tagWord)
     allDivs.push(newElement);
     createNumberContainer();
     setActiveDiv(newElement);
+    newElement.style.height = '20vw';
+    newElement.style.width = '80vw';
     // activeDiv = newElement;
+  }
+  else if(tag == '')
+  {
+    setEditMode('STYLE');
   }
   return newElement;
 }
@@ -338,7 +358,7 @@ function setActiveElement(element)
 {
   unHighlightActive();
   activeElement = element;
-
+  currentClone = activeElement.cloneNode(true);
   observer.disconnect();
   //observe element
   // Start observing the target node for configured mutations
@@ -439,10 +459,13 @@ function setEditMode(mode)
   {
     showImageSearch();
   }
-  // if(mode != 'SELECT')
-  if(mode == 'STYLE')
+  else if(mode == 'STYLE')
   {
     // hideElementNumbers();
+    //set undoClone
+     //how div? only style changes but not delete children
+     undoAbleAction = 0;
+     // undoClone = activeElement.cloneNode(true);
   }
   document.querySelector('#test').innerHTML = editMode;
 }
@@ -520,7 +543,6 @@ const activeElementChanged = function(mutationsList, observer)
             // console.log('The ' + mutation.attributeName + ' attribute was modified.');
             //need check for numbers i.e. from 2 to 20 to 25, need to wait
             //add last command to commits
-            addToCommits('Style: '+lastCommit);
 
             clearTimeout(clearCommandTimer);
             clearCommandTimer = setTimeout(function()
@@ -528,6 +550,19 @@ const activeElementChanged = function(mutationsList, observer)
               setSaid('');
               resetStartIndex();
             }, 800);
+
+            //update undoClone if more than one edit?
+            undoAbleAction++;
+            if(undoAbleAction > 1)
+            {
+              undoAbleAction = 1;
+              undoClone = currentClone;
+              currentClone = activeElement.cloneNode(true);
+              // activeElement.parentNode.appendChild(undoClone);
+            }
+
+            addToCommits('Style: '+lastCommit);
+
             // if(mutation.oldValue == null)
             // {
             //   clearTimeout(clearCommandTimer);
@@ -569,7 +604,14 @@ function addStyleToElement(element, commandString)
   if(wordsAsArray.includes('colour'))
   {
     wordIndex = wordsAsArray.indexOf('colour')+1;
-    element.style.color = wordsAsArray[wordIndex];
+    if(element.classList.contains('circle') || element.classList.contains('square'))
+    {
+      element.style.backgroundColor = wordsAsArray[wordIndex];
+    }
+    else
+    {
+      element.style.color = wordsAsArray[wordIndex];
+    }
   }
 
   if(wordsAsArray.includes('background'))
@@ -585,33 +627,50 @@ function addStyleToElement(element, commandString)
   {
       wordIndex = wordsAsArray.indexOf('with')+1;
       //check if word or number and convert to number
-      element.style.width = wordsAsArray[wordIndex]+'%';
+      element.style.width = wordsAsArray[wordIndex]+'vw';
+      if(element.classList.contains('circle') || element.classList.contains('square'))
+      {
+        element.style.height = wordsAsArray[wordIndex]+'vw';
+      }
   }
   if(wordsAsArray.includes('width')) //thickness/width
   {
       wordIndex = wordsAsArray.indexOf('width')+1;
       //check if word or number and convert to number
-      element.style.width = wordsAsArray[wordIndex]+'%';
+      element.style.width = wordsAsArray[wordIndex]+'vw';
+      if(element.classList.contains('circle') || element.classList.contains('square'))
+      {
+        element.style.height = wordsAsArray[wordIndex]+'vw';
+      }
   }
   if(wordsAsArray.includes('which')) //thickness/width
   {
       wordIndex = wordsAsArray.indexOf('which')+1;
       //check if word or number and convert to number
-      element.style.width = wordsAsArray[wordIndex]+'%';
+      element.style.width = wordsAsArray[wordIndex]+'vw';
+      if(element.classList.contains('circle') || element.classList.contains('square'))
+      {
+        element.style.height = wordsAsArray[wordIndex]+'vw';
+      }
   }
   //lastindexof, need check if next to eachother
   if(wordsAsArray.includes('height'))//how to take last spoken value? or delete rendered ones
   {
-      wordIndex = wordsAsArray.indexOf('height')+1;
-      //check if word or number and convert to number
-      element.style.height = wordsAsArray[wordIndex]+'%';
+    wordIndex = wordsAsArray.indexOf('height')+1;
+
+    if(element.classList.contains('circle') || element.classList.contains('square'))
+    {
+      element.style.width = wordsAsArray[wordIndex]+'vw';
+    }
+    element.style.height = wordsAsArray[wordIndex]+'vw';
   }
 
   if(wordsAsArray.includes('top'))
   {
       wordIndex = wordsAsArray.indexOf('top')+1;
       //check if word or number and convert to number
-      element.style.top = wordsAsArray[wordIndex]+'%';
+      // element.style.top = wordsAsArray[wordIndex]+'vw';
+      element.style.marginTop = wordsAsArray[wordIndex]+'vw';
       // element.style.marginTop = wordsAsArray[topWordIndex]+'%';
   }
 
@@ -620,7 +679,8 @@ function addStyleToElement(element, commandString)
     wordIndex = wordsAsArray.indexOf('left')+1;
     //check if word or number and convert to number
     // element.style.marginLeft = wordsAsArray[wordIndex]+'%';
-    element.style.left = wordsAsArray[wordIndex]+'%';
+    // element.style.left = wordsAsArray[wordIndex]+'vw';
+    element.style.marginLeft = wordsAsArray[wordIndex]+'vw';
   }
 
   if(wordsAsArray.includes('size'))
@@ -1021,6 +1081,18 @@ function toggleCodeWindow()
   {
     codeWindow.style.left = '-25vw';
   }
+}
+
+function undo()
+{
+  //record every undoable action? just last one for now
+  //store clone of active element, after each undoable action,
+            //replace clone with new
+  let parentNode = activeElement.parentNode;
+  parentNode.removeChild(activeElement);
+  //need to take position in div, childNodes.indexOf ?
+  setActiveElement(undoClone);
+  parentNode.appendChild(activeElement);
 }
 
 // document.querySelector('input').onkeydown = function(evt)

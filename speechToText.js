@@ -3,7 +3,7 @@ window.SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGramma
 
 let recognition;
 // recognition.lang = 'fr-FR';
-let validTagCommands = ['heading', 'title', 'paragraph', 'division'];
+let validTagCommands = ['heading', 'title', 'paragraph', 'division', 'circle', 'square'];
 // let validTagCommands = ['heading', 'title', 'paragraph', 'image', 'picture', 'division'];
 // recognition.lang = 'en-US';
 let grammar = "#JSGF V1.0; grammar commands; public <commands> = division | heading | clear | yep | title | color | width | height | background | 1 | 2 | 3 | 4"
@@ -75,11 +75,12 @@ function processSpeech(currentCommand)
   {
     setSaid('Say something.');
   }
-  lastWord = getLastWord(currentCommand).toLowerCase();
   said.innerHTML = currentCommand;
+  currentCommand = currentCommand.toLowerCase();
+  lastWord = getLastWord(currentCommand);  
   // document.querySelector('input').innerHTML = currentCommand;
   let currentCommandAsList = currentCommand.split(' ');
-  let firstWord = currentCommandAsList[0].toLowerCase();
+  let firstWord = currentCommandAsList[0];
   let lastWordRegEx = new RegExp(lastWord, "i");//case insensitive
   let editMode = getEditMode();
 
@@ -127,10 +128,21 @@ function processSpeech(currentCommand)
     // setSaid('');
     startIndex = globalTrans.split(" ").length;
   }
+  else if(lastWord == 'whoops' || lastWord == 'oops' || lastWord == 'oops' || lastWord == 'undo')//clear everything
+  {
+    undo();
+    startIndex = globalTrans.split(" ").length;
+  }
 
   if(currentCommand.includes('image') || currentCommand.includes('picture'))
   {
     setEditMode('IMAGE');
+    startIndex = globalTrans.split(" ").length;
+  }
+
+  if(currentCommand.includes('code'))
+  {
+    toggleCodeWindow();
     startIndex = globalTrans.split(" ").length;
   }
   // else if(lastWord == 'search' && getEditMode() == 'IMAGE')
