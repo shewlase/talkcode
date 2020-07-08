@@ -412,7 +412,7 @@ function setActiveElement(element)
   // }
   if(element.tagName == "H1" || element.tagName == "P")
   {
-
+    //only should do nothing on creation?
   }
   else
   {
@@ -430,6 +430,7 @@ function setActiveElementById(id)
   // let selectedElement = activeNumberContainer[0].childNodes[hackId-1];
   let selectedElement = activeNumberContainer[1][hackId-1][0];
   setActiveElement(selectedElement);
+  setEditMode('STYLE');
   hideElementNumbers();
 
   if(activeElement.tagName == 'DIV')
@@ -842,6 +843,7 @@ function duplicateActiveElement()
   // activeElement.parentNode.insertBefore(cloneNode, activeElement);
   activeElement.parentNode.appendChild(cloneNode)
   setActiveElement(cloneNode);
+  setEditMode('STYLE');
 
   if(cloneNode.tagName == 'div')
   {
@@ -1154,6 +1156,8 @@ function undo()
   parentNode.removeChild(activeElement);
   //need to take position in div, childNodes.indexOf ?
   setActiveElement(undoClone);
+  setEditMode('STYLE');
+  
   parentNode.appendChild(activeElement);
 }
 
