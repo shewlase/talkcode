@@ -9,6 +9,14 @@ let imageData; //from pexels search
 let pageNumber = 1;
 //resultDiv container
 let activeNumberContainer;
+let showHelp = true;
+let helpTopTitle = document.querySelector('#help').querySelectorAll('h1')[0];
+let helpBotTitle = document.querySelector('#help').querySelectorAll('h1')[1];
+  //need select teaching/home to add more elements
+let helpCreateText = '<br>"title"<br> "paragraph"<br> "image" <br>"square" <br>"circle" <br><br>Or edit one by saying "select"';
+let helpTextContent = 'Say what you want the text to be';
+let helpSaveOrClear = '<br>Say "clear" to start again or "yep" to save';
+let helpStyle = '<br>"color" [blue, red etc]<br> "width" / "height" / "top" / "left" [then a number which represents a percentage of the screen width e.g. "width 50" = 50% of screen width.]<br>"background" [blue, red etc] <br>"opacity" [number from 0-1 e.g. "zero point five"]<br>"rotate"  [number of degrees] <br> "absolute" <br><br> (for text) "size" [number] <br> "caps" <br> "center"'  ;
 
 let startIndex = 0;
 let codeWindow = document.querySelector('#codeWindow');
@@ -63,7 +71,7 @@ function init()
    allDivs.push(resultPage);
    createNumberContainer();
    activeDiv = resultPage;
-   activeDiv.style.border = '2px solid blue';
+   // activeDiv.style.border = '2px solid blue';
    setActiveNumberContainer();
    createGalleryControls();
    setTimeout(function()
@@ -91,6 +99,19 @@ function applyCommand(voiceCommand)
   setCodeWindow();
 }
 
+function toggleHelp()
+{
+  showHelp = !showHelp;
+  if(showHelp)
+  {
+    document.querySelector('#help').style.display = 'block';
+  }
+  else
+  {
+    document.querySelector('#help').style.display = 'none';
+  }
+}
+
 function clearNumbers()
 {
   numberContainers = [];
@@ -108,14 +129,29 @@ function createElementFromWord(tagWord)
   if(tagWord == 'heading' || tagWord == 'h' || tagWord == 'title')
   {
     tag = 'h1';
+    if(showHelp)
+    {
+      helpTopTitle.innerHTML = helpTextContent;
+      helpBotTitle.innerHTML = helpSaveOrClear;
+    }
   }
   else if(tagWord == 'paragraph')
   {
     tag = 'p';
+    if(showHelp)
+    {
+      helpTopTitle.innerHTML = helpTextContent;
+      helpBotTitle.innerHTML = helpSaveOrClear;
+    }
   }
   else if(tagWord == 'image' || tagWord == 'picture')//remove
   {
     tag = 'img';
+    // if(showHelp)
+    // {
+    //   helpTopTitle.innerHTML = "Styling commands:";
+    //   helpBotTitle.innerHTML = helpStyle;
+    // }
   }
   else if(tagWord == 'division')
   {
@@ -131,11 +167,15 @@ function createElementFromWord(tagWord)
   {
     newElement = document.createElement('div');
     newElement.classList.add('circle');
+    // helpTopTitle.innerHTML = "Styling commands:";
+    // helpBotTitle.innerHTML = helpStyle;
   }
   else if(tagWord == 'square')
   {
     newElement = document.createElement('div');
     newElement.classList.add('square');
+    // helpTopTitle.innerHTML = "Styling commands:";
+    // helpBotTitle.innerHTML = helpStyle;
   }
   activeDiv.appendChild(newElement);
   // if(activeDiv != null)
@@ -159,7 +199,7 @@ function createElementFromWord(tagWord)
     newElement.style.width = '80vw';
     // activeDiv = newElement;
   }
-  else if(tag == '')
+  else if(tag == '' || tagWord.toLowerCase() == 'circle' || tagWord.toLowerCase() == 'square')
   {
     setEditMode('STYLE');
   }
@@ -370,7 +410,14 @@ function setActiveElement(element)
   // {
   //   setActiveDiv(element);
   // }
-  setEditMode('STYLE');
+  if(element.tagName == "H1" || element.tagName == "P")
+  {
+
+  }
+  else
+  {
+    setEditMode('STYLE');
+  }
 
   // setEditMode('CONTENT');
 }
@@ -422,7 +469,7 @@ function highlightActiveElement()
   activeElement.style.outline = '0.3vw solid yellow';
   if(activeElement.tagName == 'DIV')
   {
-    activeElement.style.outline = '0.3vw solid blue';
+    // activeElement.style.outline = '0.3vw solid blue';
   }
 }
 
@@ -445,6 +492,11 @@ function setEditMode(mode)
     //hide numbers
 
     unHighlightActive();//when done editing style, unhighlight
+    if(showHelp)
+    {
+      helpTopTitle.innerHTML = "Create an element with one of these commands:";
+      helpBotTitle.innerHTML = helpCreateText;
+    }
     // hideElementNumbers();
 
     // setActiveDiv(resultPage);
@@ -453,6 +505,11 @@ function setEditMode(mode)
   else if (mode == 'SELECT')//'edit'
   {
     showElementNumbers();
+    if(showHelp)
+    {
+      helpTopTitle.innerHTML = "Say the number you wish to select";
+      helpBotTitle.innerHTML = "";
+    }
     //show numbers for activeDiv
   }
   else if(mode == 'IMAGE')
@@ -464,6 +521,11 @@ function setEditMode(mode)
     // hideElementNumbers();
     //set undoClone
      //how div? only style changes but not delete children
+     if(showHelp)
+     {
+       helpTopTitle.innerHTML = "Styling commands:";
+       helpBotTitle.innerHTML = helpStyle;
+     }
      undoAbleAction = 0;
      // undoClone = activeElement.cloneNode(true);
   }
@@ -1079,7 +1141,7 @@ function toggleCodeWindow()
   }
   else
   {
-    codeWindow.style.left = '-25vw';
+    codeWindow.style.left = '-40vw';
   }
 }
 

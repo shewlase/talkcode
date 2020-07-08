@@ -77,7 +77,7 @@ function processSpeech(currentCommand)
   }
   said.innerHTML = currentCommand;
   currentCommand = currentCommand.toLowerCase();
-  lastWord = getLastWord(currentCommand);  
+  lastWord = getLastWord(currentCommand);
   // document.querySelector('input').innerHTML = currentCommand;
   let currentCommandAsList = currentCommand.split(' ');
   let firstWord = currentCommandAsList[0];
@@ -85,7 +85,7 @@ function processSpeech(currentCommand)
   let editMode = getEditMode();
 
   //somehow undo last changes?
-  if(lastWord == 'cancel')
+  if(lastWord == 'cancel' || lastWord == 'delete')
   {
     deleteActiveElement();
     setEditMode('HOME');
@@ -125,12 +125,17 @@ function processSpeech(currentCommand)
   {
     duplicateActiveElement();
     addToCommits('duplicate');
-    // setSaid('');
+    setSaid(' ');
     startIndex = globalTrans.split(" ").length;
   }
   else if(lastWord == 'whoops' || lastWord == 'oops' || lastWord == 'oops' || lastWord == 'undo')//clear everything
   {
     undo();
+    startIndex = globalTrans.split(" ").length;
+  }
+  else if(lastWord == 'help')//clear everything
+  {
+    toggleHelp();
     startIndex = globalTrans.split(" ").length;
   }
 
